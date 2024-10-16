@@ -54,6 +54,7 @@ Partial Class frmMain
         Me.picButton00 = New System.Windows.Forms.PictureBox()
         Me.picButton02 = New System.Windows.Forms.PictureBox()
         Me.pnlButton = New System.Windows.Forms.Panel()
+        Me.cmdButton21 = New System.Windows.Forms.Button()
         Me.cmdButton20 = New System.Windows.Forms.Button()
         Me.cmdButton18 = New System.Windows.Forms.Button()
         Me.cmdButton17 = New System.Windows.Forms.Button()
@@ -97,6 +98,7 @@ Partial Class frmMain
         Me.pnlMenu = New System.Windows.Forms.Panel()
         Me.picDetail28 = New System.Windows.Forms.PictureBox()
         Me.picDetail24 = New System.Windows.Forms.PictureBox()
+        Me.picDetail09 = New System.Windows.Forms.PictureBox()
         Me.picDetail27 = New System.Windows.Forms.PictureBox()
         Me.picDetail23 = New System.Windows.Forms.PictureBox()
         Me.picDetail25 = New System.Windows.Forms.PictureBox()
@@ -131,7 +133,6 @@ Partial Class frmMain
         Me.lblMaster00 = New System.Windows.Forms.Label()
         Me.Label37 = New System.Windows.Forms.Label()
         Me.lblMaster05 = New System.Windows.Forms.Label()
-        Me.picDetail09 = New System.Windows.Forms.PictureBox()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lblMaster92 = New System.Windows.Forms.Label()
         Me.lblPStat = New System.Windows.Forms.Label()
@@ -172,6 +173,7 @@ Partial Class frmMain
         Me.pnlMenu.SuspendLayout()
         CType(Me.picDetail28, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.picDetail24, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.picDetail09, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.picDetail27, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.picDetail23, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.picDetail25, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -202,7 +204,6 @@ Partial Class frmMain
         CType(Me.picDetail00, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel5.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.picDetail09, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -296,11 +297,11 @@ Partial Class frmMain
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Courier New", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label10.ForeColor = System.Drawing.Color.ForestGreen
-        Me.Label10.Location = New System.Drawing.Point(12, 144)
+        Me.Label10.Location = New System.Drawing.Point(33, 144)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(158, 18)
+        Me.Label10.Size = New System.Drawing.Size(148, 18)
         Me.Label10.TabIndex = 313
-        Me.Label10.Text = "Service Charge:"
+        Me.Label10.Text = "Service Charge"
         '
         'Label16
         '
@@ -552,11 +553,29 @@ Partial Class frmMain
         Me.pnlButton.Controls.Add(Me.cmdButton05)
         Me.pnlButton.Controls.Add(Me.cmdButton04)
         Me.pnlButton.Controls.Add(Me.cmdButton03)
+        Me.pnlButton.Controls.Add(Me.cmdButton21)
         Me.pnlButton.Location = New System.Drawing.Point(896, 1)
         Me.pnlButton.Margin = New System.Windows.Forms.Padding(2)
         Me.pnlButton.Name = "pnlButton"
         Me.pnlButton.Size = New System.Drawing.Size(112, 674)
         Me.pnlButton.TabIndex = 6
+        '
+        'cmdButton21
+        '
+        Me.cmdButton21.BackColor = System.Drawing.SystemColors.Control
+        Me.cmdButton21.BackgroundImage = CType(resources.GetObject("cmdButton21.BackgroundImage"), System.Drawing.Image)
+        Me.cmdButton21.FlatAppearance.BorderSize = 0
+        Me.cmdButton21.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.cmdButton21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cmdButton21.ForeColor = System.Drawing.Color.White
+        Me.cmdButton21.Location = New System.Drawing.Point(2, 276)
+        Me.cmdButton21.Margin = New System.Windows.Forms.Padding(2)
+        Me.cmdButton21.Name = "cmdButton21"
+        Me.cmdButton21.Size = New System.Drawing.Size(100, 35)
+        Me.cmdButton21.TabIndex = 52
+        Me.cmdButton21.TabStop = False
+        Me.cmdButton21.Text = "CHARGE"
+        Me.cmdButton21.UseVisualStyleBackColor = False
         '
         'cmdButton20
         '
@@ -640,7 +659,7 @@ Partial Class frmMain
         Me.cmdButton14.Size = New System.Drawing.Size(100, 35)
         Me.cmdButton14.TabIndex = 42
         Me.cmdButton14.TabStop = False
-        Me.cmdButton14.Text = "CANCEL O.R."
+        Me.cmdButton14.Text = "CANCEL S.I."
         Me.cmdButton14.UseVisualStyleBackColor = False
         '
         'cmdButton13
@@ -1173,6 +1192,7 @@ Partial Class frmMain
         Me.pnlMenu.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.pnlMenu.Controls.Add(Me.picDetail28)
         Me.pnlMenu.Controls.Add(Me.picDetail24)
+        Me.pnlMenu.Controls.Add(Me.picDetail09)
         Me.pnlMenu.Controls.Add(Me.picDetail27)
         Me.pnlMenu.Controls.Add(Me.picDetail23)
         Me.pnlMenu.Controls.Add(Me.picDetail25)
@@ -1229,6 +1249,18 @@ Partial Class frmMain
         Me.picDetail24.Size = New System.Drawing.Size(70, 70)
         Me.picDetail24.TabIndex = 57
         Me.picDetail24.TabStop = False
+        '
+        'picDetail09
+        '
+        Me.picDetail09.BackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.picDetail09.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.picDetail09.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.picDetail09.Location = New System.Drawing.Point(304, 78)
+        Me.picDetail09.Margin = New System.Windows.Forms.Padding(2)
+        Me.picDetail09.Name = "picDetail09"
+        Me.picDetail09.Size = New System.Drawing.Size(70, 70)
+        Me.picDetail09.TabIndex = 27
+        Me.picDetail09.TabStop = False
         '
         'picDetail27
         '
@@ -1670,18 +1702,6 @@ Partial Class frmMain
         Me.lblMaster05.TabIndex = 5
         Me.lblMaster05.Text = "Michael Torres Cuison"
         '
-        'picDetail09
-        '
-        Me.picDetail09.BackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.picDetail09.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.picDetail09.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.picDetail09.Location = New System.Drawing.Point(850, 3)
-        Me.picDetail09.Margin = New System.Windows.Forms.Padding(2)
-        Me.picDetail09.Name = "picDetail09"
-        Me.picDetail09.Size = New System.Drawing.Size(70, 70)
-        Me.picDetail09.TabIndex = 27
-        Me.picDetail09.TabStop = False
-        '
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.Color.Transparent
@@ -1841,7 +1861,7 @@ Partial Class frmMain
         Me.lblMaster80.Location = New System.Drawing.Point(981, 35)
         Me.lblMaster80.Name = "lblMaster80"
         Me.lblMaster80.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblMaster80.Size = New System.Drawing.Size(23, 16)
+        Me.lblMaster80.Size = New System.Drawing.Size(22, 16)
         Me.lblMaster80.TabIndex = 294
         Me.lblMaster80.Text = "02"
         '
@@ -1852,7 +1872,7 @@ Partial Class frmMain
         Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(18, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(206, Byte), Integer))
         Me.Label3.Location = New System.Drawing.Point(692, 35)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(114, 16)
+        Me.Label3.Size = New System.Drawing.Size(113, 16)
         Me.Label3.TabIndex = 293
         Me.Label3.Text = "POS Terminal No.:"
         '
@@ -1894,7 +1914,6 @@ Partial Class frmMain
         Me.ClientSize = New System.Drawing.Size(1029, 768)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
-        Me.Controls.Add(Me.picDetail09)
         Me.DoubleBuffered = True
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.KeyPreview = True
@@ -1926,6 +1945,7 @@ Partial Class frmMain
         Me.pnlMenu.ResumeLayout(False)
         CType(Me.picDetail28, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.picDetail24, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.picDetail09, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.picDetail27, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.picDetail23, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.picDetail25, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1956,7 +1976,6 @@ Partial Class frmMain
         CType(Me.picDetail00, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel5.ResumeLayout(False)
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.picDetail09, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
@@ -2084,4 +2103,5 @@ Partial Class frmMain
     Friend WithEvents CheckBox1 As CheckBox
     Friend WithEvents cmdButton20 As Button
     Friend WithEvents lblMaster92 As Label
+    Friend WithEvents cmdButton21 As Button
 End Class

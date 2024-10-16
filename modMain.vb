@@ -66,6 +66,8 @@ Module modMain
         '    Exit Sub
         'End If
 
+
+
         '0->With Open Sales Order From Previous Sale;
         '1->Sales for the Day was already closed;
         '2->Sales for the Day is Ok;
@@ -121,6 +123,7 @@ Module modMain
 
             If Not poSales.NewTransaction Then
                 pdPOSDatex = poSales.POSDate
+
                 Return poSales.SalesStatus
             End If
 
@@ -147,7 +150,7 @@ Module modMain
             MsgBox(ex.Message)
             Return -1
         End Try
-
+        Debug.Print(poSales.SalesStatus)
         Return poSales.SalesStatus
     End Function
 

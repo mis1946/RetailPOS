@@ -1,6 +1,7 @@
 ﻿Imports ggcRetailSales
 Imports ggcAppDriver
 Imports ggcReceipt
+Imports System.Runtime.InteropServices
 
 Public Class frmMain
     'fixed image max count
@@ -14,6 +15,8 @@ Public Class frmMain
     Private pnDtailPage As Integer = 0
     Private pnTotalTble As Integer = 0
 
+    Private pnBill As Double = 0
+
     Private pnToolTip As New ToolTip()
     Private p_sTerminal As String
 
@@ -24,6 +27,7 @@ Public Class frmMain
     Private p_sLogName As String
 
     Private WithEvents p_oTrans As New_Sales_Order
+    Private WithEvents poReceipt As Receipt
 
     Property Terminal() As String
         Get
@@ -31,6 +35,14 @@ Public Class frmMain
         End Get
         Set(ByVal value As String)
             p_sTerminal = value
+        End Set
+    End Property
+    Property Bill() As Double
+        Get
+            Return pnBill
+        End Get
+        Set(ByVal value As Double)
+            pnBill = value
         End Set
     End Property
 
@@ -59,13 +71,25 @@ Public Class frmMain
         Label4.Text = p_oTrans.BranchName
         Label9.Text = p_oTrans.Address
 
-        Call initDetailImages()
+
+
+        Call p_oTrans.getPriceUpdateToday()
         Call initCategoryImages()
+        If p_oAppDriver.BranchCode = "P013" Then
+            initDetailImages("0021")
+
+        Else
+            Call initDetailImages()
+        End If
+
+        cmdButton21.Visible = p_oAppDriver.BranchCode = "P013"
+        cmdButton04.Visible = Not p_oAppDriver.BranchCode = "P013"
 
         loadTable()
         If p_oTrans.LoadOrder Then
             loadOrder()
         End If
+
 
         Call loadMaster()
     End Sub
@@ -84,6 +108,7 @@ Public Class frmMain
 
         p_oTrans = New New_Sales_Order(p_oAppDriver)
         p_sTerminal = p_oTrans.POSNumber
+        poReceipt = New Receipt(p_oAppDriver)
 
         p_oTrans.ValidDailySales = pbValidSales
         p_oTrans.PosDate = pdPOSDatex
@@ -92,9 +117,22 @@ Public Class frmMain
         p_oTrans.Cashier = psCashierx
         p_oTrans.LogName = modMain.p_sLogName
 
-        Call initDetailImages()
+        Debug.Print(psCashierx)
+
+        If p_oAppDriver.BranchCode = "P013" Then
+            initDetailImages("0021")
+        Else
+            Call initDetailImages()
+        End If
         Call initCategoryImages()
 
+
+        If poSales.SalesStatus = xeTranStat.TRANS_OPEN Then
+            MsgBox("Unable to create New Order, Please tag (Pay / Void) all Pending Orders and perform a EOD.",
+                            MsgBoxStyle.Critical,
+                            "Warning")
+
+        End If
         loadMaster()
         loadTable()
     End Sub
@@ -166,7 +204,8 @@ Public Class frmMain
             Call grpEventHandler(Me, GetType(Label), "lblTable", "DoubleClick", AddressOf lblTable_DoubleClick)
 
             Call newOrder()
-            
+
+
 
             If p_oTrans.cTranMode.Equals("D") Then
                 lblPStat.Visible = True
@@ -202,20 +241,12 @@ Public Class frmMain
                     p_oAppDriver.SaveEvent("0027", "", p_oTrans.SerialNo)
                     Me.Close()
                 End If
-            Case Keys.F5
-                'Call newOrder()
-                Call ClearOrder()
             Case Keys.Add
                 Call procValues(2)
                 e.SuppressKeyPress = True
             Case Keys.Subtract
                 Call procValues(1)
                 e.SuppressKeyPress = True
-                'Case Keys.F9 'pay charge
-                '    p_oTrans.PrintChargeOR()
-                '    Call newOrder()
-                'Case Keys.F10 'tag charge
-                '    p_oTrans.PayCharge()
                 Call newOrder()
             Case Keys.F7 'Charge Invoice
                 If p_oTrans.ChargeOrder() Then newOrder()
@@ -224,13 +255,25 @@ Public Class frmMain
 
                 loRLC = New PRN_RLC_Reading(p_oAppDriver)
                 loRLC.showRLC()
-            Case Keys.F9
-                'p_oTrans.ReComputeReading()
+            'Case Keys.F9
+            '    'p_oTrans.ReComputeReading()
+            Case Keys.F8 'GetLatestPriceUpdate
+                If Not p_oAppDriver.getUserApproval() Then Exit Sub
+                p_oTrans.getPriceUpdateToday(True)
+            Case Keys.F5
+                'Call newOrder()
+                Call ClearOrder()
+            Case Keys.F9 'pay charge
+                p_oTrans.PrintChargeOR()
+            Case Keys.F10 'tag charge
+                p_oTrans.PayCharge()
+                Call newOrder()
             Case Keys.F11 'browse order
                 p_oTrans.BrowseOrder()
             Case Keys.F12 'reprint or
                 p_oTrans.Reprint()
         End Select
+
     End Sub
 
     Private Sub Timer2_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer2.Tick
@@ -288,6 +331,7 @@ Public Class frmMain
                     Call initPanel(1, False)
                     If lnIndex = 4 Then
                         If .PayOrder() Then newOrder()
+
                     ElseIf lnIndex = 6 Then
                         If .ChargeOrder() Then newOrder()
                     ElseIf lnIndex = 7 Then
@@ -303,7 +347,9 @@ Public Class frmMain
                             Call initPanel(1, True)
                             Exit Sub
                         End If
-                        If .IssueDiscount() Then newOrder()
+                        If .IssueDiscount() Then
+                            newOrder()
+                        End If
                     End If
                     Call initPanel(1, True)
                 Case 9
@@ -346,7 +392,7 @@ Public Class frmMain
                     Call ClearOrder()
                     'End If
                 Case 17
-                    Call p_oTrans.Reprint()
+                    Call .Reprint()
                 Case 18
                     If p_oTrans.BrowseOpenOrder() Then
                         loadOrder()
@@ -385,6 +431,9 @@ Public Class frmMain
                     End If
 
                     loadTable()
+                Case 21 ' Charge Invoice
+
+                    If p_oTrans.ChargeOrder() Then newOrder()
             End Select
         End With
 endProc:
@@ -438,6 +487,16 @@ endProc:
             lblMaster90.Text = Format(poSales.POSDate, xsDATE_LONG)
             lblMaster91.Text = "," & Format(poSales.POSDate, "dddd")
             lblMaster92.Text = IIf(.Master("sTableNox") = "0" Or .Master("sTableNox") = "", "", "T" & .Master("sTableNox"))
+
+            Dim lnStat = Not poSales.SalesStatus = xeTranStat.TRANS_OPEN
+
+            pnlMenu.Enabled = lnStat
+            pnlCategory.Enabled = lnStat
+            pnlDetButt.Enabled = lnStat
+            cmdButton19.Enabled = lnStat
+            txtDetail00.Enabled = lnStat
+
+
         End With
     End Sub
 
@@ -464,7 +523,6 @@ endProc:
                 .Columns(2).Width = 160
             End If
         End With
-
         showComputation()
     End Sub
 
@@ -501,7 +559,6 @@ endProc:
             Call clearSeek()
         End With
     End Sub
-
     Private Sub showComputation()
         'kalyptus - 2017.01.20 01:21pm
         'Deduct nVoidTotl from nTranTotl to show the actual sales after the reversal of an ordered item...
@@ -512,18 +569,78 @@ endProc:
 
         lblMaster13.Text = FormatNumber(p_oTrans.Master("nVATSales"), 2) 'vat sales
         lblMaster14.Text = FormatNumber(p_oTrans.Master("nVATAmtxx"), 2) 'vat amount
-        lblMaster15.Text = FormatNumber(p_oTrans.Master("nNonVATxx"), 2) 'non vat 
-        lblMaster17.Text = FormatNumber(p_oTrans.Master("nDiscount") + p_oTrans.Master("nVatDiscx") + p_oTrans.Master("nPWDDiscx"), 2) 'discounts
+        lblMaster15.Text = FormatNumber(p_oTrans.Master("nNonVATxx") - p_oTrans.Master("nPWDDiscx"), 2) 'non vat 
+        Debug.Print(p_oTrans.Master("nPWDDiscx"))
+        lblMaster17.Text = FormatNumber(p_oTrans.Master("nDiscount") + p_oTrans.Master("nVatDiscx") + p_oTrans.Master("nPWDDiscx") + 0.00001, 2) 'discounts
         'jovan 03-12-2021
 
-        lnAmntDuex = FormatNumber(CDbl(lblMaster04.Text) - CDbl(lblMaster17.Text), 2) 'amount due
+        lnSrvCrge = IFNull(p_oTrans.Master("nSChargex"), 0)
+        If lnSrvCrge > 0 Then
+            If CDbl(lblMaster15.Text) > 0 Then
+                lnAmntDuex = FormatNumber(CDbl(lblMaster13.Text) + CDbl(lblMaster14.Text) + CDbl(lblMaster15.Text), 2)
+                lnSrvCrge = CDbl(IIf(lblMaster13.Text > 0, (CDbl(lblMaster13.Text) + CDbl(lblMaster15.Text)), CDbl(lblMaster15.Text))) * 0.05
+            Else
+                lnAmntDuex = FormatNumber(CDbl(lblMaster13.Text) + CDbl(lblMaster14.Text) + CDbl(lblMaster15.Text), 2)
+                lnSrvCrge = CDbl(IIf(lblMaster13.Text > 0, CDbl(lblMaster13.Text) + CDbl(lblMaster15.Text), CDbl(lblMaster15.Text))) * 0.05
+            End If 'amount due
+        Else
+            lnAmntDuex = FormatNumber(CDbl(lblMaster13.Text) + CDbl(lblMaster14.Text) + CDbl(lblMaster15.Text), 2)
+        End If
+
         'lblAmount.Text = FormatNumber(CDbl(lblMaster04.Text) - CDbl(lblMaster17.Text), 2) 'amount due
 
-        lnSrvCrge = IFNull(p_oTrans.Master("nSChargex"), 0)
         lblSrvCrge.Text = FormatNumber(lnSrvCrge, 2)
+
         lblAmount.Text = FormatNumber(lnAmntDuex + lnSrvCrge, 2)
         p_oTrans.setTranTotal = lblAmount.Text
+        p_oTrans.setSChargex = lnSrvCrge
+        p_oTrans.setBill = lnAmntDuex
+        p_oTrans.servicecharge = Format(lnSrvCrge, xsDECIMAL)
+
     End Sub
+
+    'Private Sub showComputation()
+    '    'kalyptus - 2017.01.20 01:21pm
+    '    'Deduct nVoidTotl from nTranTotl to show the actual sales after the reversal of an ordered item...
+    '    Dim lnSrvCrge As Double
+    '    Dim lnAmntDuex As Double
+
+    '    lblMaster04.Text = FormatNumber(p_oTrans.Master("nTranTotl") - p_oTrans.Master("nVoidTotl"), 2) 'sales total
+
+    '    'lblMaster13.Text = FormatNumber(CDbl(lblMaster04.Text) / 1.12, 2) 'vat sales
+    '    'lblMaster14.Text = FormatNumber(CDbl(lblMaster13.Text) * 0.12, 2) 'vat amount
+    '    'lblMaster15.Text = FormatNumber(CDbl(lblMastrer13.Text) + CDbl(lblMaster14.Text), 2) 'non vat 
+    '    'lblMaster17.Text = FormatNumber(p_oTrans.Master("nDiscount") + p_oTrans.Master("nPWDDiscx"), 2) 'discounts
+    '    ''jovan 03-12-2021
+
+    '    'lnAmntDuex = FormatNumber(CDbl(lblMaster04.Text) - CDbl(lblMaster17.Text), 2) 'amount due
+    '    'lblAmount.Text = FormatNumber(CDbl(lblMaster04.Text) - CDbl(lblMaster17.Text), 2) 'amount due
+
+    '    'lblSrvCrge.Text = FormatNumber()
+
+
+    '    'lblMaster13.Text = FormatNumber(CDbl(lblMaster04.Text) / 1.12, 2) 'vat sales
+    '    'lblMaster14.Text = FormatNumber(CDbl(lblMaster13.Text) * 0.12, 2) 'vat amount
+    '    'lblMaster15.Text = FormatNumber(p_oTrans.Master("nDiscount"), 2) 'non vat 
+    '    'lblMaster17.Text = FormatNumber(p_oTrans.Master("nDiscount"), 2) 'discounts
+    '    ''jovan 03-12-2021
+
+    '    'lnAmntDuex = FormatNumber(CDbl(lblMaster04.Text) - CDbl(lblMaster17.Text), 2) 'amount due
+    '    'lblAmount.Text = FormatNumber(CDbl(lblMaster04.Text) - CDbl(lblMaster17.Text), 2) 'amount due
+
+
+    '    'lblMaster04.Text = FormatNumber(p_oTrans.Master("nTranTotl") - p_oTrans.Master("nVoidTotl"), 2) 'sales total
+
+    '    lblMaster13.Text = FormatNumber(p_oTrans.Master("nVATSales"), 2) 'vat sales
+    '    lblMaster14.Text = FormatNumber(p_oTrans.Master("nVATAmtxx"), 2) 'vat amount
+    '    lblMaster15.Text = FormatNumber(p_oTrans.Master("nNonVATxx"), 2) 'non vat 
+    '    lblMaster17.Text = FormatNumber(p_oTrans.Master("nDiscount") + p_oTrans.Master("nVatDiscx") + p_oTrans.Master("nPWDDiscx"), 2) 'discounts
+    '    'jovan 03-12-2021
+
+    '    lnAmntDuex = FormatNumber(CDbl(lblMaster04.Text) - CDbl(lblMaster17.Text), 2) 'amount due
+    '    lblAmount.Text = FormatNumber(CDbl(lblMaster04.Text) - CDbl(lblMaster17.Text), 2) 'amount due
+
+    'End Sub
 
     'Private Sub showComputationNew()
     '    'jovan - 2020.10.15 revised presentation of discount in interface
@@ -1453,7 +1570,8 @@ endProc:
     Private Sub cmdButton00_MouseHover(ByVal sender As Object, ByVal e As System.EventArgs) Handles _
         cmdButton00.MouseHover, cmdButton01.MouseHover, cmdButton02.MouseHover, cmdButton03.MouseHover, cmdButton04.MouseHover,
         cmdButton05.MouseHover, cmdButton07.MouseHover, cmdButton08.MouseHover,
-        cmdButton10.MouseHover, cmdButton11.MouseHover, cmdButton12.MouseHover, cmdButton13.MouseHover, cmdButton14.MouseHover
+        cmdButton10.MouseHover, cmdButton11.MouseHover, cmdButton12.MouseHover, cmdButton13.MouseHover, cmdButton14.MouseHover,
+        cmdButton21.MouseHover
 
         Dim cmdButton As Button
 
@@ -1494,11 +1612,13 @@ endProc:
                     Case 13
                         .SetToolTip(cmdButton, "End Shift")
                     Case 14
-                        .SetToolTip(cmdButton, "Cancel O.R.")
+                        .SetToolTip(cmdButton, "Cancel S.I.")
                     Case 15
                         .SetToolTip(cmdButton, "Pay Charge")
                     Case 19
                         .SetToolTip(cmdButton, "Search Item")
+                    Case 21
+                        .SetToolTip(cmdButton, "Charge Invoice")
                 End Select
             End With
 
@@ -1512,4 +1632,5 @@ endProc:
             txtDetail00.AutoCompleteMode = AutoCompleteMode.None
         End If
     End Sub
+
 End Class

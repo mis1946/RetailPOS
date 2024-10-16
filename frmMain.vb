@@ -77,9 +77,13 @@ Public Class frmMain
         Call initCategoryImages()
         If p_oAppDriver.BranchCode = "P013" Then
             initDetailImages("0021")
+
         Else
             Call initDetailImages()
         End If
+
+        cmdButton21.Visible = p_oAppDriver.BranchCode = "P013"
+        cmdButton04.Visible = Not p_oAppDriver.BranchCode = "P013"
 
         loadTable()
         If p_oTrans.LoadOrder Then
@@ -427,6 +431,9 @@ Public Class frmMain
                     End If
 
                     loadTable()
+                Case 21 ' Charge Invoice
+
+                    If p_oTrans.ChargeOrder() Then newOrder()
             End Select
         End With
 endProc:
@@ -1563,7 +1570,8 @@ endProc:
     Private Sub cmdButton00_MouseHover(ByVal sender As Object, ByVal e As System.EventArgs) Handles _
         cmdButton00.MouseHover, cmdButton01.MouseHover, cmdButton02.MouseHover, cmdButton03.MouseHover, cmdButton04.MouseHover,
         cmdButton05.MouseHover, cmdButton07.MouseHover, cmdButton08.MouseHover,
-        cmdButton10.MouseHover, cmdButton11.MouseHover, cmdButton12.MouseHover, cmdButton13.MouseHover, cmdButton14.MouseHover
+        cmdButton10.MouseHover, cmdButton11.MouseHover, cmdButton12.MouseHover, cmdButton13.MouseHover, cmdButton14.MouseHover,
+        cmdButton21.MouseHover
 
         Dim cmdButton As Button
 
@@ -1609,6 +1617,8 @@ endProc:
                         .SetToolTip(cmdButton, "Pay Charge")
                     Case 19
                         .SetToolTip(cmdButton, "Search Item")
+                    Case 21
+                        .SetToolTip(cmdButton, "Charge Invoice")
                 End Select
             End With
 

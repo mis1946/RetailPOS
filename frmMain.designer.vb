@@ -54,6 +54,7 @@ Partial Class frmMain
         Me.picButton00 = New System.Windows.Forms.PictureBox()
         Me.picButton02 = New System.Windows.Forms.PictureBox()
         Me.pnlButton = New System.Windows.Forms.Panel()
+        Me.cmdButton21 = New System.Windows.Forms.Button()
         Me.cmdButton20 = New System.Windows.Forms.Button()
         Me.cmdButton18 = New System.Windows.Forms.Button()
         Me.cmdButton17 = New System.Windows.Forms.Button()
@@ -552,11 +553,29 @@ Partial Class frmMain
         Me.pnlButton.Controls.Add(Me.cmdButton05)
         Me.pnlButton.Controls.Add(Me.cmdButton04)
         Me.pnlButton.Controls.Add(Me.cmdButton03)
+        Me.pnlButton.Controls.Add(Me.cmdButton21)
         Me.pnlButton.Location = New System.Drawing.Point(896, 1)
         Me.pnlButton.Margin = New System.Windows.Forms.Padding(2)
         Me.pnlButton.Name = "pnlButton"
         Me.pnlButton.Size = New System.Drawing.Size(112, 674)
         Me.pnlButton.TabIndex = 6
+        '
+        'cmdButton21
+        '
+        Me.cmdButton21.BackColor = System.Drawing.SystemColors.Control
+        Me.cmdButton21.BackgroundImage = CType(resources.GetObject("cmdButton21.BackgroundImage"), System.Drawing.Image)
+        Me.cmdButton21.FlatAppearance.BorderSize = 0
+        Me.cmdButton21.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.cmdButton21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cmdButton21.ForeColor = System.Drawing.Color.White
+        Me.cmdButton21.Location = New System.Drawing.Point(2, 276)
+        Me.cmdButton21.Margin = New System.Windows.Forms.Padding(2)
+        Me.cmdButton21.Name = "cmdButton21"
+        Me.cmdButton21.Size = New System.Drawing.Size(100, 35)
+        Me.cmdButton21.TabIndex = 52
+        Me.cmdButton21.TabStop = False
+        Me.cmdButton21.Text = "CHARGE"
+        Me.cmdButton21.UseVisualStyleBackColor = False
         '
         'cmdButton20
         '
@@ -2084,4 +2103,5 @@ Partial Class frmMain
     Friend WithEvents CheckBox1 As CheckBox
     Friend WithEvents cmdButton20 As Button
     Friend WithEvents lblMaster92 As Label
+    Friend WithEvents cmdButton21 As Button
 End Class

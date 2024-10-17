@@ -86,6 +86,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\GGC_Systems\vb.net\RetMgtSys\MySql.Web.dll</HintPath>
     </Reference>
+    <Reference Include="Renci.SshNet, Version=2020.0.1.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\GGC_Systems\vb.net\RetMgtSys\Renci.SshNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -96,6 +100,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="WinSCPnet, Version=1.15.0.14991, Culture=neutral, PublicKeyToken=2271ec4a3c56d0bf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\GGC_Systems\vb.net\RetMgtSys\WinSCPnet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -348,6 +356,10 @@
     <ProjectReference Include="..\ggcPayment\ggcPayment.vbproj">
       <Project>{a7bb8738-7dd6-45a0-90c9-fc346648fbf3}</Project>
       <Name>ggcPayment</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ggcRetailParams\ggcRetailParams.vbproj">
+      <Project>{4883f473-c0b0-4266-a9ac-8e4bca3c4cb7}</Project>
+      <Name>ggcRetailParams</Name>
     </ProjectReference>
     <ProjectReference Include="..\ggcRetailSales\ggcRetailSales.vbproj">
       <Project>{81352368-B116-4D39-8FFB-5A74905DE7F8}</Project>
